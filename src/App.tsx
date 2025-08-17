@@ -45,114 +45,141 @@ const nodeData = [
 const edgeData = [
   {
     sourceNodeId: "start",
-    sourcePinId: "outputNavigationPin",
+    sourcePinId: "",
     targetNodeId: "expectationAboutYourself",
     targetPinId: "inputNavigationPin",
   },
   {
     sourceNodeId: "expectationAboutYourself",
-    sourcePinId: "outputNavigationPin",
+    sourcePinId: "",
     targetNodeId: "name",
     targetPinId: "inputNavigationPin",
   },
   {
     sourceNodeId: "name",
-    sourcePinId: "outputNavigationPin",
+    sourcePinId: "",
     targetNodeId: "dob",
     targetPinId: "inputNavigationPin",
   },
   {
     sourceNodeId: "dob",
-    sourcePinId: "outputNavigationPin",
+    sourcePinId: "",
     targetNodeId: "address",
     targetPinId: "inputNavigationPin",
   },
   {
     sourceNodeId: "address",
-    sourcePinId: "outputNavigationPin",
+    sourcePinId: "",
     targetNodeId: "ageCheck",
     targetPinId: "inputNavigationPin",
   },
   {
     sourceNodeId: "ageCheck",
-    sourcePinId: "outputNavigationPinContinue",
+    sourcePinId: "Continue",
     targetNodeId: "employment",
     targetPinId: "inputNavigationPin",
   },
   {
     sourceNodeId: "ageCheck",
-    sourcePinId: "outputNavigationPinDecline",
+    sourcePinId: "Decline",
     targetNodeId: "ageCheckDecline",
     targetPinId: "inputNavigationPin",
   },
   {
     sourceNodeId: "ageCheckDecline",
-    sourcePinId: "outputNavigationPin",
+    sourcePinId: "",
     targetNodeId: "end",
     targetPinId: "inputNavigationPin",
   },
   {
     sourceNodeId: "employment",
-    sourcePinId: "outputNavigationPin",
+    sourcePinId: "",
     targetNodeId: "housing",
     targetPinId: "inputNavigationPin",
   },
   {
     sourceNodeId: "housing",
-    sourcePinId: "outputNavigationPin",
+    sourcePinId: "",
     targetNodeId: "income",
     targetPinId: "inputNavigationPin",
   },
   {
     sourceNodeId: "income",
-    sourcePinId: "outputNavigationPin",
+    sourcePinId: "",
     targetNodeId: "householdIncome",
     targetPinId: "inputNavigationPin",
   },
   {
     sourceNodeId: "householdIncome",
-    sourcePinId: "outputNavigationPin",
+    sourcePinId: "",
     targetNodeId: "informationReview",
     targetPinId: "inputNavigationPin",
   },
   {
     sourceNodeId: "informationReview",
-    sourcePinId: "outputNavigationPin",
+    sourcePinId: "",
     targetNodeId: "primaryChecks",
     targetPinId: "inputNavigationPin",
   },
   {
     sourceNodeId: "primaryChecks",
-    sourcePinId: "outputNavigationPin",
+    sourcePinId: "",
     targetNodeId: "pin",
     targetPinId: "inputNavigationPin",
   },
   {
     sourceNodeId: "pin",
-    sourcePinId: "outputNavigationPin",
+    sourcePinId: "",
     targetNodeId: "end",
     targetPinId: "inputNavigationPin",
   },
 ];
 
 function App() {
-  // Create initial nodes with automatic positioning
+  // Create initial nodes with vertical positioning
   const initialNodes = useMemo(() => {
-    return nodeData.map((node, index) => ({
-      id: node.id,
-      position: {
-        x: (index % 3) * 300 + 100,
-        y: Math.floor(index / 3) * 150 + 50,
-      },
-      data: {
-        label: node.label,
-        nodeType: node.type,
-      },
-      className: `border-2 border-gray-800 rounded-lg p-3 min-w-[150px] text-center text-gray-800 font-bold`,
-      style: {
-        backgroundColor: getNodeColor(node.type),
-      },
-    }));
+    // Define the vertical order of nodes in the workflow
+    const verticalOrder = [
+      "start",
+      "expectationAboutYourself",
+      "name",
+      "dob",
+      "address",
+      "ageCheck",
+      "employment",
+      "housing",
+      "income",
+      "householdIncome",
+      "informationReview",
+      "primaryChecks",
+      "pin",
+      "end",
+    ];
+
+    return nodeData.map((node) => {
+      const verticalIndex = verticalOrder.indexOf(node.id);
+      const isDeclineNode = node.id === "ageCheckDecline";
+
+      return {
+        id: node.id,
+        position: {
+          // Main flow in center, decline node offset to the right
+          x: isDeclineNode ? 600 : 400,
+          // Decline node positioned at same level as employment
+          y: isDeclineNode
+            ? verticalOrder.indexOf("employment") * 120 + 50
+            : verticalIndex * 120 + 50,
+        },
+        data: {
+          label: node.label,
+          nodeType: node.type,
+        },
+        className: `border-2 border-gray-800 rounded-lg p-3 min-w-[150px] text-center text-gray-800 font-bold`,
+        style: {
+          backgroundColor: getNodeColor(node.type),
+        },
+      };
+    });
   }, []);
 
   // Create initial edges with pin information as labels
@@ -162,7 +189,7 @@ function App() {
       source: edge.sourceNodeId,
       target: edge.targetNodeId,
       label: edge.sourcePinId,
-      animated: true,
+      animated: false,
       style: { stroke: "#374151", strokeWidth: 2 },
       markerEnd: {
         type: "arrowclosed" as const,
