@@ -10,7 +10,17 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useMemo } from "react";
 
-const nodeDefinitions = [
+interface Node {
+  id: string;
+}
+
+interface Edge {
+  source: string;
+  target: string;
+  label?: string;
+}
+
+const nodeDefinitions: Node[] = [
   { id: "start" },
   { id: "expectations" },
   { id: "name" },
@@ -29,7 +39,7 @@ const nodeDefinitions = [
   { id: "ageDeclineEnd" },
 ];
 
-const edgeDefinitions = [
+const edgeDefinitions: Edge[] = [
   { source: "start", target: "expectations" },
   { source: "expectations", target: "name" },
   { source: "name", target: "dob" },
