@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { exampleInputText } from "../example-data";
 import type { EdgeDefinition, NodeDefinition } from "../types";
 import { parseEdges, parseNodes } from "../utils";
 
@@ -9,7 +10,7 @@ interface Props {
 }
 
 const InputPanel = ({ setNodeDefinitions, setEdgeDefinitions }: Props) => {
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState(exampleInputText);
 
   const handleParse = () => {
     const nodes = parseNodes(inputText);
