@@ -41,98 +41,23 @@ const nodeData = [
   { id: "end", type: "EndNode", label: "End" },
 ];
 
-// Define the edge data from the user's requirements
+// Define the edge data - simplified without pin concept
 const edgeData = [
-  {
-    sourceNodeId: "start",
-    sourcePinId: "",
-    targetNodeId: "expectationAboutYourself",
-    targetPinId: "inputNavigationPin",
-  },
-  {
-    sourceNodeId: "expectationAboutYourself",
-    sourcePinId: "",
-    targetNodeId: "name",
-    targetPinId: "inputNavigationPin",
-  },
-  {
-    sourceNodeId: "name",
-    sourcePinId: "",
-    targetNodeId: "dob",
-    targetPinId: "inputNavigationPin",
-  },
-  {
-    sourceNodeId: "dob",
-    sourcePinId: "",
-    targetNodeId: "address",
-    targetPinId: "inputNavigationPin",
-  },
-  {
-    sourceNodeId: "address",
-    sourcePinId: "",
-    targetNodeId: "ageCheck",
-    targetPinId: "inputNavigationPin",
-  },
-  {
-    sourceNodeId: "ageCheck",
-    sourcePinId: "Continue",
-    targetNodeId: "employment",
-    targetPinId: "inputNavigationPin",
-  },
-  {
-    sourceNodeId: "ageCheck",
-    sourcePinId: "Decline",
-    targetNodeId: "ageCheckDecline",
-    targetPinId: "inputNavigationPin",
-  },
-  {
-    sourceNodeId: "ageCheckDecline",
-    sourcePinId: "",
-    targetNodeId: "end",
-    targetPinId: "inputNavigationPin",
-  },
-  {
-    sourceNodeId: "employment",
-    sourcePinId: "",
-    targetNodeId: "housing",
-    targetPinId: "inputNavigationPin",
-  },
-  {
-    sourceNodeId: "housing",
-    sourcePinId: "",
-    targetNodeId: "income",
-    targetPinId: "inputNavigationPin",
-  },
-  {
-    sourceNodeId: "income",
-    sourcePinId: "",
-    targetNodeId: "householdIncome",
-    targetPinId: "inputNavigationPin",
-  },
-  {
-    sourceNodeId: "householdIncome",
-    sourcePinId: "",
-    targetNodeId: "informationReview",
-    targetPinId: "inputNavigationPin",
-  },
-  {
-    sourceNodeId: "informationReview",
-    sourcePinId: "",
-    targetNodeId: "primaryChecks",
-    targetPinId: "inputNavigationPin",
-  },
-  {
-    sourceNodeId: "primaryChecks",
-    sourcePinId: "",
-    targetNodeId: "pin",
-    targetPinId: "inputNavigationPin",
-  },
-  {
-    sourceNodeId: "pin",
-    sourcePinId: "",
-    targetNodeId: "end",
-    targetPinId: "inputNavigationPin",
-  },
+  { source: "start", target: "expectationAboutYourself" },
+  { source: "expectationAboutYourself", target: "name" },
+  { source: "name", target: "dob" },
+  { source: "dob", target: "address" },
+  { source: "address", target: "ageCheck" },
+  { source: "ageCheck", target: "employment", label: "Continue" },
+  { source: "ageCheck", target: "ageCheckDecline", label: "Decline" },
+  { source: "ageCheckDecline", target: "end" },
+  { source: "employment", target: "housing" },
+  { source: "housing", target: "income" },
+  { source: "income", target: "householdIncome" },
+  { source: "householdIncome", target: "informationReview" },
+  { source: "informationReview", target: "primaryChecks" },
+  { source: "primaryChecks", target: "pin" },
+  { source: "pin", target: "end" },
 ];
 
 function App() {
@@ -182,26 +107,29 @@ function App() {
     });
   }, []);
 
-  // Create initial edges with pin information as labels
+  // Create initial edges with simplified structure
   const initialEdges = useMemo(() => {
     return edgeData.map((edge, index) => ({
       id: `edge-${index}`,
-      source: edge.sourceNodeId,
-      target: edge.targetNodeId,
-      label: edge.sourcePinId,
+      source: edge.source,
+      target: edge.target,
+      label: edge.label || "", // Only show label if it exists (Continue/Decline)
       animated: false,
       style: { stroke: "#374151", strokeWidth: 2 },
       markerEnd: {
         type: "arrowclosed" as const,
         color: "#374151",
       },
-      labelStyle: {
-        fontSize: "12px",
-        backgroundColor: "rgba(255, 255, 255, 0.8)",
-        padding: "2px 4px",
-        borderRadius: "3px",
-        border: "1px solid #d1d5db",
-      },
+      labelStyle: edge.label
+        ? {
+            fontSize: "12px",
+            backgroundColor: "rgba(255, 255, 255, 0.9)",
+            padding: "4px 8px",
+            borderRadius: "4px",
+            border: "1px solid #d1d5db",
+            fontWeight: "bold",
+          }
+        : undefined,
     }));
   }, []);
 
