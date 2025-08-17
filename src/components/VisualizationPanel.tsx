@@ -7,7 +7,7 @@ import {
   useEdgesState,
   useNodesState,
 } from "@xyflow/react";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 
 import type { EdgeDefinition, NodeDefinition } from "../types";
 
@@ -69,8 +69,16 @@ const VisualizationPanel = ({ nodeDefinitions, edgeDefinitions }: Props) => {
     }));
   }, [edgeDefinitions]);
 
-  const [nodes, , onNodesChange] = useNodesState(initialNodes);
-  const [edges, , onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  useEffect(() => {
+    setNodes(initialNodes);
+  }, [initialNodes, setNodes]);
+
+  useEffect(() => {
+    setEdges(initialEdges);
+  }, [initialEdges, setEdges]);
 
   return (
     <div className="flex-1">
