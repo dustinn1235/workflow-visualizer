@@ -10,54 +10,43 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useMemo } from "react";
 
-// Define the node data from the user's requirements
-const nodeData = [
-  { id: "start", type: "StartNode", label: "Start" },
-  {
-    id: "expectationAboutYourself",
-    type: "ExpectationNode",
-    label: "Expectation About Yourself",
-  },
-  { id: "name", type: "NameNode", label: "Name" },
-  { id: "dob", type: "DobNode", label: "Date of Birth" },
-  { id: "address", type: "AddressNode", label: "Address" },
-  { id: "employment", type: "EmploymentNode", label: "Employment" },
-  { id: "ageCheck", type: "AgeCheckNode", label: "Age Check" },
-  { id: "ageCheckDecline", type: "DeclineNode", label: "Age Check Decline" },
-  { id: "housing", type: "HousingNode", label: "Housing" },
-  { id: "income", type: "IncomeNode", label: "Income" },
-  {
-    id: "householdIncome",
-    type: "HouseholdIncomeNode",
-    label: "Household Income",
-  },
-  {
-    id: "informationReview",
-    type: "InformationReviewNode",
-    label: "Information Review",
-  },
-  { id: "primaryChecks", type: "PrimaryChecksNode", label: "Primary Checks" },
-  { id: "pin", type: "PinNode", label: "PIN" },
-  { id: "end", type: "EndNode", label: "End" },
+// Simplified node data
+const nodeDefinitions = [
+  { id: "start" },
+  { id: "expectations" },
+  { id: "name" },
+  { id: "dob" },
+  { id: "address" },
+  { id: "ageCheck" },
+  { id: "employment" },
+  { id: "housing" },
+  { id: "income" },
+  { id: "householdIncome" },
+  { id: "review" },
+  { id: "checks" },
+  { id: "pin" },
+  { id: "pinEnd" },
+  { id: "ageDecline" },
+  { id: "ageDeclineEnd" },
 ];
 
-// Define the edge data - simplified without pin concept
-const edgeData = [
-  { source: "start", target: "expectationAboutYourself" },
-  { source: "expectationAboutYourself", target: "name" },
+// Simplified edge connections
+const edgeDefinitions = [
+  { source: "start", target: "expectations" },
+  { source: "expectations", target: "name" },
   { source: "name", target: "dob" },
   { source: "dob", target: "address" },
   { source: "address", target: "ageCheck" },
   { source: "ageCheck", target: "employment", label: "Continue" },
-  { source: "ageCheck", target: "ageCheckDecline", label: "Decline" },
-  { source: "ageCheckDecline", target: "end" },
+  { source: "ageCheck", target: "ageDecline", label: "Decline" },
+  { source: "ageDecline", target: "ageDeclineEnd" },
   { source: "employment", target: "housing" },
   { source: "housing", target: "income" },
   { source: "income", target: "householdIncome" },
-  { source: "householdIncome", target: "informationReview" },
-  { source: "informationReview", target: "primaryChecks" },
-  { source: "primaryChecks", target: "pin" },
-  { source: "pin", target: "end" },
+  { source: "householdIncome", target: "review" },
+  { source: "review", target: "checks" },
+  { source: "checks", target: "pin" },
+  { source: "pin", target: "pinEnd" },
 ];
 
 function App() {
@@ -66,7 +55,7 @@ function App() {
     // Define the vertical order of nodes in the workflow
     const verticalOrder = [
       "start",
-      "expectationAboutYourself",
+      "expectations",
       "name",
       "dob",
       "address",
@@ -75,41 +64,39 @@ function App() {
       "housing",
       "income",
       "householdIncome",
-      "informationReview",
-      "primaryChecks",
+      "review",
+      "checks",
       "pin",
-      "end",
+      "pinEnd",
     ];
 
-    return nodeData.map((node) => {
+    return nodeDefinitions.map((node) => {
       const verticalIndex = verticalOrder.indexOf(node.id);
-      const isDeclineNode = node.id === "ageCheckDecline";
+      const isDeclineNode =
+        node.id === "ageDecline" || node.id === "ageDeclineEnd";
 
       return {
         id: node.id,
         position: {
-          // Main flow in center, decline node offset to the right
-          x: isDeclineNode ? 600 : 400,
-          // Decline node positioned at same level as employment
-          y: isDeclineNode
-            ? verticalOrder.indexOf("employment") * 120 + 50
-            : verticalIndex * 120 + 50,
+          // Main flow in center, decline nodes offset to the right
+          x: isDeclineNode ? 650 : 400,
+          // Position decline nodes appropriately
+          y:
+            node.id === "ageDecline"
+              ? verticalOrder.indexOf("employment") * 120 + 50
+              : node.id === "ageDeclineEnd"
+              ? verticalOrder.indexOf("employment") * 120 + 170
+              : verticalIndex * 120 + 50,
         },
-        data: {
-          label: node.label,
-          nodeType: node.type,
-        },
+        data: { label: node.id },
         className: `border-2 border-gray-800 rounded-lg p-3 min-w-[150px] text-center text-gray-800 font-bold`,
-        style: {
-          backgroundColor: getNodeColor(node.type),
-        },
       };
     });
   }, []);
 
   // Create initial edges with simplified structure
   const initialEdges = useMemo(() => {
-    return edgeData.map((edge, index) => ({
+    return edgeDefinitions.map((edge, index) => ({
       id: `edge-${index}`,
       source: edge.source,
       target: edge.target,
@@ -151,21 +138,6 @@ function App() {
       </ReactFlow>
     </div>
   );
-}
-
-// Helper function to assign colors based on node type
-function getNodeColor(nodeType: string): string {
-  const colorMap: { [key: string]: string } = {
-    StartNode: "#90EE90", // Light green for start
-    EndNode: "#FFB6C1", // Light pink for end
-    DeclineNode: "#FFB6B6", // Light red for decline
-    AgeCheckNode: "#FFD700", // Gold for decision nodes
-    PrimaryChecksNode: "#DDA0DD", // Plum for complex checks
-    ExpectationNode: "#87CEEB", // Sky blue for expectations
-    InformationReviewNode: "#F0E68C", // Khaki for review
-  };
-
-  return colorMap[nodeType] || "#E6E6FA"; // Default lavender color
 }
 
 export default App;
