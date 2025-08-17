@@ -39,7 +39,7 @@ const VisualizationPanel = ({ nodeDefinitions, edgeDefinitions }: Props) => {
               : verticalIndex * 120 + 50,
         },
         data: { label: node.id },
-        className: `border-2 border-gray-800 rounded-lg p-3 min-w-[150px] text-center text-gray-800 font-bold`,
+        className: `border-2 border-gray-800 rounded-lg p-3 min-w-[200px] text-center text-gray-800 font-bold`,
       };
     });
   }, [nodeDefinitions]);
