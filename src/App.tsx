@@ -10,7 +10,6 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useMemo } from "react";
 
-// Simplified node data
 const nodeDefinitions = [
   { id: "start" },
   { id: "expectations" },
@@ -30,7 +29,6 @@ const nodeDefinitions = [
   { id: "ageDeclineEnd" },
 ];
 
-// Simplified edge connections
 const edgeDefinitions = [
   { source: "start", target: "expectations" },
   { source: "expectations", target: "name" },
@@ -50,7 +48,6 @@ const edgeDefinitions = [
 ];
 
 function App() {
-  // Create initial nodes with vertical positioning
   const initialNodes = useMemo(() => {
     // Define the vertical order of nodes in the workflow
     const verticalOrder = [
@@ -94,13 +91,12 @@ function App() {
     });
   }, []);
 
-  // Create initial edges with simplified structure
   const initialEdges = useMemo(() => {
     return edgeDefinitions.map((edge, index) => ({
       id: `edge-${index}`,
       source: edge.source,
       target: edge.target,
-      label: edge.label || "", // Only show label if it exists (Continue/Decline)
+      label: edge.label || "",
       animated: false,
       style: { stroke: "#374151", strokeWidth: 2 },
       markerEnd: {
