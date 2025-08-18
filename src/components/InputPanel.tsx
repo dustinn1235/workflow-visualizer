@@ -19,6 +19,7 @@ const InputPanel = ({ setNodeDefinitions, setEdgeDefinitions }: Props) => {
     let finalEdges: EdgeDefinition[] = edges;
     let finalNodes: NodeDefinition[] = nodes;
 
+    // replace end node with unique end node
     edges.forEach((edge, edgeIndex) => {
       if (edge.target === "end") {
         finalEdges = [
@@ -39,12 +40,14 @@ const InputPanel = ({ setNodeDefinitions, setEdgeDefinitions }: Props) => {
         );
 
         finalNodes = [
-          ...finalNodes.slice(0, nodeIndex),
+          ...finalNodes.slice(0, nodeIndex + 1),
           { id: `${edge.source}End` },
           ...finalNodes.slice(nodeIndex + 1),
         ];
       }
     });
+
+    finalNodes = finalNodes.filter((node) => node.id !== "end");
 
     setNodeDefinitions(finalNodes);
     setEdgeDefinitions(finalEdges);

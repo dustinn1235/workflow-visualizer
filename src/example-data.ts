@@ -1,38 +1,17 @@
 export const exampleNodeDefinitions = [
   { id: "start" },
-  { id: "expectations" },
-  { id: "name" },
-  { id: "dob" },
-  { id: "address" },
   { id: "ageCheck" },
-  { id: "employment" },
-  { id: "housing" },
-  { id: "income" },
-  { id: "householdIncome" },
-  { id: "review" },
-  { id: "checks" },
   { id: "pin" },
-  { id: "pinEnd" },
   { id: "ageDecline" },
-  { id: "ageDeclineEnd" },
+  { id: "end" },
 ];
 
 export const exampleEdgeDefinitions = [
-  { source: "start", target: "expectations" },
-  { source: "expectations", target: "name" },
-  { source: "name", target: "dob" },
-  { source: "dob", target: "address" },
-  { source: "address", target: "ageCheck" },
-  { source: "ageCheck", target: "employment", label: "Continue" },
+  { source: "start", target: "ageCheck" },
+  { source: "ageCheck", target: "pin", label: "Continue" },
   { source: "ageCheck", target: "ageDecline", label: "Decline" },
-  { source: "ageDecline", target: "ageDeclineEnd" },
-  { source: "employment", target: "housing" },
-  { source: "housing", target: "income" },
-  { source: "income", target: "householdIncome" },
-  { source: "householdIncome", target: "review" },
-  { source: "review", target: "checks" },
-  { source: "checks", target: "pin" },
-  { source: "pin", target: "pinEnd" },
+  { source: "ageDecline", target: "end" },
+  { source: "pin", target: "end" },
 ];
 
 export const exampleInputText = `
