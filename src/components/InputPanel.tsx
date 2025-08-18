@@ -16,8 +16,38 @@ const InputPanel = ({ setNodeDefinitions, setEdgeDefinitions }: Props) => {
     const nodes = parseNodes(inputText);
     const edges = parseEdges(inputText);
 
-    setNodeDefinitions(nodes);
-    setEdgeDefinitions(edges);
+    let finalEdges: EdgeDefinition[] = edges;
+    let finalNodes: NodeDefinition[] = nodes;
+
+    edges.forEach((edge, edgeIndex) => {
+      if (edge.target === "end") {
+        finalEdges = [
+          ...finalEdges.slice(0, edgeIndex),
+          {
+            ...edge,
+            target: `${edge.source}End`,
+          },
+          ...finalEdges.slice(edgeIndex + 1),
+        ];
+
+        if (finalNodes.find((node) => node.id === `${edge.source}End`)) {
+          return;
+        }
+
+        const nodeIndex = finalNodes.findIndex(
+          (node) => node.id === edge.source
+        );
+
+        finalNodes = [
+          ...finalNodes.slice(0, nodeIndex),
+          { id: `${edge.source}End` },
+          ...finalNodes.slice(nodeIndex + 1),
+        ];
+      }
+    });
+
+    setNodeDefinitions(finalNodes);
+    setEdgeDefinitions(finalEdges);
   };
 
   return (
