@@ -22,21 +22,12 @@ const VisualizationPanel = ({ nodeDefinitions, edgeDefinitions }: Props) => {
 
     return nodeDefinitions.map((node) => {
       const verticalIndex = verticalOrder.indexOf(node.id);
-      const isDeclineNode =
-        node.id === "ageDecline" || node.id === "ageDeclineEnd";
 
       return {
         id: node.id,
         position: {
-          // Main flow in center, decline nodes offset to the right
-          x: isDeclineNode ? 650 : 400,
-          // Position decline nodes appropriately
-          y:
-            node.id === "ageDecline"
-              ? verticalOrder.indexOf("employment") * 120 + 50
-              : node.id === "ageDeclineEnd"
-              ? verticalOrder.indexOf("employment") * 120 + 170
-              : verticalIndex * 120 + 50,
+          x: 400,
+          y: verticalIndex * 120 + 50,
         },
         data: { label: node.id },
         className: `border-2 border-gray-800 rounded-lg p-3 min-w-[200px] text-center text-gray-800 font-bold`,
@@ -50,7 +41,7 @@ const VisualizationPanel = ({ nodeDefinitions, edgeDefinitions }: Props) => {
       source: edge.source,
       target: edge.target,
       label: edge.label || "",
-      animated: false,
+      animated: true,
       style: { stroke: "#374151", strokeWidth: 2 },
       markerEnd: {
         type: "arrowclosed" as const,
