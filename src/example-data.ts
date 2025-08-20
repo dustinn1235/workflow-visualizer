@@ -16,28 +16,28 @@ export const exampleEdgeDefinitions = [
 export const exampleInputText = `
   const nodes = [
     new StartNode('start'),
-    new NodeA('nodeA'),
-    new NodeB('nodeB'),
-    new NodeC('nodeC'),
+    new ANode('a'),
+    new BNode('b'),
+    new CNode('c'),
     new EndNode('end'),
   ];
   const edges = [
     new Edge({
       sourceNodeId: 'start',
       sourcePinId: 'outputNavigationPin',
-      targetNodeId: 'nodeA',
+      targetNodeId: 'a',
       targetPinId: 'inputNavigationPin',
     }),
     new Edge({
       sourceNodeId: 'nodeA',
       sourcePinId: 'outputNavigationPin',
-      targetNodeId: 'nodeB',
+      targetNodeId: 'b',
       targetPinId: 'inputNavigationPin',
     }),
     new Edge({
       sourceNodeId: 'nodeB',
       sourcePinId: 'outputNavigationPin',
-      targetNodeId: 'nodeC',
+      targetNodeId: 'c',
       targetPinId: 'inputNavigationPin',
     }),
     new Edge({
