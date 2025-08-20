@@ -29,19 +29,19 @@ export const exampleInputText = `
       targetPinId: 'inputNavigationPin',
     }),
     new Edge({
-      sourceNodeId: 'nodeA',
+      sourceNodeId: 'a',
       sourcePinId: 'outputNavigationPin',
       targetNodeId: 'b',
       targetPinId: 'inputNavigationPin',
     }),
     new Edge({
-      sourceNodeId: 'nodeB',
+      sourceNodeId: 'b',
       sourcePinId: 'outputNavigationPin',
       targetNodeId: 'c',
       targetPinId: 'inputNavigationPin',
     }),
     new Edge({
-      sourceNodeId: 'nodeC',
+      sourceNodeId: 'c',
       sourcePinId: 'outputNavigationPin',
       targetNodeId: 'end',
       targetPinId: 'inputNavigationPin',
